@@ -1,0 +1,10 @@
+pillow==8.1.1
+tensorflow
+Flask==1.0.2
+numpy==1.19.3
+Flask==1.0.2
+Jinja2==2.10.1
+keras
+gunicorn==19.9.0
+
+
