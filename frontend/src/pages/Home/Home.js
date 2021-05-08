@@ -14,17 +14,25 @@ class Home extends Component {
  
   render() {
     function classifyImage() {
-        let resp = null;
-        const apiUrl = ``;
-        return axios.get(apiUrl).then(response => {
-            resp = response.data
-            return resp
-        })
-    }
-    function handleUpload() {
+      // let resp = null;
+      // const apiUrl = ``;
+      // return axios.get(apiUrl).then(response => {
+      //     resp = response.data
+      //     return resp
+      // })
+      fetch('http://127.0.0.1:5000/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: data
+      }).then((response) => { return response.json() })
+  }
+
+  function handleUpload() {
         // Call Predict API
         classifyImage()
-    }
+  }
 
     return (
       <div className="App">

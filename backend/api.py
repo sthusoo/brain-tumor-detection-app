@@ -93,13 +93,20 @@ def uploaded_file(filename):
     with myGraph.as_default():
         tf.compat.v1.keras.backend.set_session(mySession)
         prediction = myModel.predict(test_img)
-        score = tf.nn.softmax(prediciton[0])
+        # score = tf.nn.softmax(prediciton[0])
         image_src = '/'+UPLOAD_FOLDER+'/'+filename
         if prediction[0][0] > 0.5:
             classification = Y # Tumor
         else:
             classification = X # Normal
-        return jsonify({"prediction": prediction[0][0], "classification": classification, "accuracy": score, "imagePath": image_src})
+        response = {
+        "status": 200, 
+        "prediction": prediction[0][0], 
+        "classification": classification, 
+        "imagePath": image_src
+        }
+
+        return jsonify(response)
 
 
 if __name__ == "__main__":
