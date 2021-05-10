@@ -25,6 +25,7 @@ import os
 #website libraries
 from flask import render_template
 from flask import Flask, flash, request, redirect, url_for, jsonify
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 #Load math library
@@ -39,6 +40,9 @@ tf.disable_v2_behavior()
 
 # create website object
 app = Flask(__name__)
+CORS(app)
+app.config['SECRET KEY'] = 'a secret key'
+app.secret_key = 'super secret key'
 
 
 def load_model_from_file():
@@ -59,8 +63,9 @@ def allowed_file(filename):
 def upload_file():
     # initial webpage load
     if request.method == 'GET':
-        return render_template('index.html',myX=X,myY=Y,mySampleX=sampleX,mySampleY=sampleY,len=len(results),results=results)
-    else: # if request.method == 'POST'
+        return jsonify({"method": request.method, "status": "200"})
+        # return render_template('index.html',myX=X,myY=Y,mySampleX=sampleX,mySampleY=sampleY)
+    if request.method == 'POST': # if request.method == 'POST'
         # check if post request has file part
         if 'file' not in request.files:
             flash('No file part')
@@ -78,41 +83,66 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD FOLDER'], filename))
+            # test_img = image.load_img(UPLOAD_FOLDER+'/'+filename, target_size=(150,150))
+            # test_img = image.img_to_array(test_img)
+            # test_img = np.expand_dims(test_img, axis=0)
+            
+            # mySession = app.config['SESSION']
+            # myModel = app.config['MODEL']
+            # myGraph = app.config['GRAPH']
+            
+            # with myGraph.as_default():
+            #     tf.compat.v1.keras.backend.set_session(mySession)
+            #     prediction = myModel.predict(test_img)
+            #     # score = tf.nn.softmax(prediciton[0])
+            #     image_src = '/'+UPLOAD_FOLDER+'/'+filename
+            #     if prediction[0][0] > 0.5:
+            #         classification = Y # Tumor
+            #     else:
+            #         classification = X # Normal
+            #     response = {
+            #     "status": 200, 
+            #     "prediction": prediction[0][0], 
+            #     "classification": classification, 
+            #     "imagePath": image_src
+            #     }
+
+            #     return jsonify(response)
             return redirect(url_for('uploaded_file', filename=filename))
         
 @app.route('/predict/<filename>')
 def uploaded_file(filename):
-    test_img = image.load_img(UPLOAD_FOLDER+'/'+filename, target_size=(150,150))
-    test_img = image.img_to_array(test_img)
-    test_img = np.expand_dims(test_img, axis=0)
+    return jsonify({'status': 200, 'method': 'POST'})
+    # test_img = image.load_img(UPLOAD_FOLDER+'/'+filename, target_size=(150,150))
+    # test_img = image.img_to_array(test_img)
+    # test_img = np.expand_dims(test_img, axis=0)
     
-    mySession = app.config['SESSION']
-    myModel = app.config['MODEL']
-    myGraph = app.config['GRAPH']
+    # mySession = app.config['SESSION']
+    # myModel = app.config['MODEL']
+    # myGraph = app.config['GRAPH']
     
-    with myGraph.as_default():
-        tf.compat.v1.keras.backend.set_session(mySession)
-        prediction = myModel.predict(test_img)
-        # score = tf.nn.softmax(prediciton[0])
-        image_src = '/'+UPLOAD_FOLDER+'/'+filename
-        if prediction[0][0] > 0.5:
-            classification = Y # Tumor
-        else:
-            classification = X # Normal
-        response = {
-        "status": 200, 
-        "prediction": prediction[0][0], 
-        "classification": classification, 
-        "imagePath": image_src
-        }
+    # with myGraph.as_default():
+    #     tf.compat.v1.keras.backend.set_session(mySession)
+    #     prediction = myModel.predict(test_img)
+    #     # score = tf.nn.softmax(prediciton[0])
+    #     image_src = '/'+UPLOAD_FOLDER+'/'+filename
+    #     if prediction[0][0] > 0.5:
+    #         classification = Y # Tumor
+    #     else:
+    #         classification = X # Normal
+    #     response = {
+    #     "status": 200, 
+    #     "prediction": prediction[0][0], 
+    #     "classification": classification, 
+    #     "imagePath": image_src
+    #     }
 
-        return jsonify(response)
+    #     return jsonify(response)
 
 
 if __name__ == "__main__":
     (mySession, myModel, myGraph) = load_model_from_file()
     
-    app.config['SECRET KEY'] = 'a secret key'
     
     app.config['SESSION'] = mySession
     app.config['MODEL'] = myModel
