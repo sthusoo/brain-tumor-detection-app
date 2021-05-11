@@ -67,7 +67,9 @@ def upload_file():
         return jsonify({"method": request.method, "status": "200"})
     else: # if request.method == 'POST'
         # check if post request has file part
+        print(request)
         if 'file' not in request.files:
+            print('file not found')
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
@@ -98,7 +100,6 @@ def uploaded_file(filename):
     with myGraph.as_default():
         tf.compat.v1.keras.backend.set_session(mySession)
         prediction = myModel.predict(test_img)
-        # score = tf.nn.softmax(prediciton[0])
         image_src = '/'+UPLOAD_FOLDER+'/'+filename
         if prediction[0][0] > 0.5:
             classification = Y # Tumor
