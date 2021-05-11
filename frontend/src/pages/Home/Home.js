@@ -12,7 +12,10 @@ class Home extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = { 
-      image: null
+      image: null,
+      classification: null,
+      prediction: null,
+      image_src: null
     };
   }
 
@@ -33,38 +36,49 @@ class Home extends Component {
     await fetch('http://127.0.0.1:5000/', {
         method: 'POST',
         body: data
-      }).then((response) => {  return response.json() }).then((data) => console.log(data))
+      }).then((response) => {  return response.json() }).then((data) => 
+      {  
+        console.log(data)
+        this.setState(() => ({classification: data.classification, prediction: data.prediction, image_src: data.imagePath }))
+        return data
+      })
   }
  
   render() {
-
-
     return (
       <div className="App">
           <Container className='title'>
             <h1> Brain Tumor Detection </h1>
           </Container>
           <Container>
-            <Row>
-                <Col>
-                    <Form>
-                        <Row id='upload-body'>
-                            <Col id='upload'>
-                                <span> Upload Brain MRI:</span>
-                                <Form.Control type="file" name='image' onChange={this.handleUpload} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Button id='submit-button' content="Submit" onClick={this.handleSubmit} />
-                        </Row>
-                    </Form>
-                </Col>
-                <Col>
-                    {/* <img width='150' height='150' src={ image_src } class='img-thumbnail' /> */}
-                    <h4>Prediction: </h4>
-                </Col>
+            <Row id='upload-body'>
+              <Form>
+                  <Col>
+                      <span>Upload Brain MRI:</span>
+                      <Form.Control type="file" name='image' onChange={this.handleUpload} />
+                  </Col>
+              </Form>
             </Row>
           </Container>
+          <Container>
+            <Row>
+              <Button id='submit-button' onClick={this.handleSubmit}>Submit</Button>
+            </Row>
+            { this.state.image_src ? 
+                <Row id='predict'><img width='150' height='150' src={this.state.image_src} class='img-thumbnail' /></Row>
+                : <Row></Row>
+            }
+            <Row id='predict'>
+              <h4>Prediction: </h4>
+            </Row>   
+            { this.state.classification != null ? 
+            <Row id='predict'>
+              { (this.state.classification == 'Tumor') ? 
+              <p>This MRI is likely that of a Brain Tumor</p> : <p>This MRI is likely that of a Normal Brain</p> 
+              }
+            </Row> : <Row></Row>
+            }
+        </Container>
       </div>
     );
   }

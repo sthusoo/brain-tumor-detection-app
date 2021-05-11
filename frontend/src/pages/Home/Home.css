@@ -18,17 +18,20 @@ form {
 
 span {
     font-family: sans-serif;
-    margin-right: 20px;
-}
-
-#upload {
-    position: absolute;
-    top: 20%;
-    left: 42%;
+    margin-left: 20px;
+    margin-right: 15px;
 }
 
 #upload-body {
-    height: 175px;
+    display: flex;
+    justify-content: center;
+    margin: 5rem;
+}
+
+#predict {
+    display: flex;
+    justify-content: center;
+    margin: 1rem;
 }
 
 label {
