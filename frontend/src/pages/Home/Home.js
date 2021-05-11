@@ -119,7 +119,7 @@ class Home extends Component {
             <Row id='predict'>
               <h4>Prediction: </h4>
             </Row>   
-            { this.state.classification != null ? 
+            { this.state.classification != null && this.state.uploaded ? 
             <Row id='predict'>
               { (this.state.classification == 'Tumor') ? 
               <p>This MRI is likely that of a Brain Tumor</p> : <p>This MRI is likely that of a Normal Brain</p> 
