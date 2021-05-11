@@ -112,7 +112,7 @@ class Home extends Component {
              <Button id='submit-button' onClick={this.predict}>Submit</Button>
             </Row> : <Row></Row>
             } */}
-            { this.state.image_src ? 
+            { this.state.uploaded ? 
                 <Row id='predict'><img width='150' height='150' src={this.state.image_src} className='img-thumbnail' /></Row>
                 : <Row></Row>
             }
