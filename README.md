@@ -1,9 +1,7 @@
 # Brain Tumor Detection
 
-
-
 ## Project Status
-This project is currently under development. Users can upload an image file of a Brain MRI. Once the image is submitted, the app will detect whether the patient has a brain tumor.
+This project is currently under development. Users can upload an image file of a Brain MRI. Once the image is submitted, the app will detect whether the patient has a brain tumor. The dataset was taken from: (https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection)[https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection]
 
 ## Installation and Setup Instructions
 
@@ -33,28 +31,8 @@ Runs the Flask app
 │   ├── assets
 │   ├── components
 │   │   ├── CheckoutForm
-│   │   │   ├── CheckoutForm.css
-│   │   │   └── CheckoutForm.js
-│   │   ├── ContactInfo
-│   │   │   ├── ContactInfo.css
-│   │   │   └── ContactInfo.js
 │   │   ├── Firebase
-│   │   │   └── Firebase.js     // Holds Firebase Configuration
-│   │   ├── Item
-│   │   │   ├── Item.css
-│   │   │   └── Item.js
-│   │   ├── MyBag
-│   │   │   ├── MyBag.css
-│   │   │   └── MyBag.js
-│   │   ├── Order
-│   │   │   ├── Order.css
-│   │   │   └── Order.js
-│   │   ├── QrCode
-│   │   │   ├── QrCode.css
-│   │   │   └── QrCode.js
-│   │   └── SuccessMessage
-│   │       ├── SuccessMessage.css
-│   │       └── SuccessMessage.js
+│   │       └── Firebase.js     // Holds Firebase Configuration
 │   ├── pages
 │   │   ├── Home
 │   │       ├── Home.css
@@ -75,5 +53,4 @@ Runs the Flask app
 ## Future Development
 - Increase ML model accuracy
 - Show confidence percentage of model
-- Store uploaded images to Firebase storage
 - Deploy app/api to a hosting platform

@@ -3,7 +3,6 @@ import './Home.css';
 import React, { Component } from 'react';
 import { Row, Col, Container, Form, Button } from 'react-bootstrap';
 import { storage } from '../../components/Firebase/firebase';
-// https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection
 
 class Home extends Component {
   constructor(props) {
