@@ -1,7 +1,7 @@
 # Brain Tumor Detection
 
 ## Project Status
-This project is currently under development. Users can upload an image file of a Brain MRI. Once the image is submitted, the app will detect whether the patient has a brain tumor. The dataset was taken from: [https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection](https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection).
+This project is currently under development. Users can upload an image file of a Brain MRI. Once the image is submitted, the app will detect whether the patient has a brain tumor. The dataset was taken from: [Kaggle](https://www.kaggle.com/navoneel/brain-mri-images-for-brain-tumor-detection).
 
 This app is hosted with Firebase Hosting at [Brain Tumor Detection App](https://brain-tumor-detection-aa187.web.app).
 
