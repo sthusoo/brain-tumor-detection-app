@@ -53,31 +53,26 @@ class Home extends Component {
           });
       }
     );
-
-    const data = new FormData();
-    data.append('file', image);
-
-    await fetch('http://127.0.0.1:5000/', {
-        method: 'POST',
-        body: data
-      }).then((response) => {  return response.json() }).then((data) => 
-      {  
-        console.log(data)
-        this.setState(() => ({classification: data.classification, prediction: data.prediction}))
-        return data
-      })
+    this.callback()
   }
+
+  callback = () => {  
+    if (this.state.uploaded) {
+      this.predict()
+    }
+  }
+
 
   predict = async () => {
     const image = this.state.image;
-    const image_src = this.state.image_src; 
     const data = new FormData();
-    console.log('this is the image URL ' + image_src)
     data.append('file', image);
+
+    const image_src = this.state.image_src; 
     
     await fetch('http://127.0.0.1:5000/', {
         method: 'POST',
-        body: data
+        body: image_src
       }).then((response) => {  return response.json() }).then((data) => 
       {  
         console.log(data)
@@ -115,6 +110,7 @@ class Home extends Component {
                 <Row id='predict'><img width='150' height='150' src={this.state.image_src} className='img-thumbnail' /></Row>
                 : <Row></Row>
             }
+            { console.log('the image source is ' + this.state.image_src) }
             <Row id='predict'>
               <h4>Prediction: </h4>
             </Row>   

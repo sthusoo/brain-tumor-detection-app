@@ -38,6 +38,13 @@ from tensorflow.python.keras.models import load_model
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 
+from PIL import Image
+import requests
+import re
+from io import BytesIO
+from urllib.request import urlopen, urlretrieve
+import base64
+
 # create website object
 app = Flask(__name__)
 CORS(app)
@@ -57,6 +64,12 @@ def load_model_from_file():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def find_image_url(string):
+    # findall() has been used 
+    # with valid conditions for urls in string
+    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    url = re.findall(regex,string)      
+    return [x[0] for x in url]
 
 # define view for top level page
 @app.route('/', methods=['GET', 'POST'])
@@ -67,29 +80,39 @@ def upload_file():
         return jsonify({"method": request.method, "status": "200"})
     else: # if request.method == 'POST'
         # check if post request has file part
-        print(request)
-        if 'file' not in request.files:
-            print('file not found')
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser submits an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        # if it isn't an image file
-        if not allowed_file(file.filename):
-            flash('I only accept files of type ' + str(ALLOWED_EXTENSIONS))
-            return redirect(request.url)
-        # when user uploads file with good parameters
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD FOLDER'], filename))
-            return redirect(url_for('uploaded_file', filename=filename))
+        image_url = find_image_url(request.data.decode('utf-8'))
+        print('the request url is ')
+        print(image_url[0])
         
-@app.route('/predict/<filename>')
-def uploaded_file(filename):
-    test_img = image.load_img(UPLOAD_FOLDER+'/'+filename, target_size=(150,150))
+        r = requests.get(image_url[0], stream=True)
+        print('the image url is ' + image_url[0])
+        # image_url = Image.open(io.BytesIO(r.content))
+
+        # if 'file' not in request.files:
+        #     print('file not found')
+        #     flash('No file part')
+        #     return redirect(request.url)
+        # file = request.files['file']
+        # if user does not select file, browser submits an empty part without filename
+        # if file.filename == '':
+        #     flash('No selected file')
+        #     return redirect(request.url)
+        # if it isn't an image file
+        # if not allowed_file(file.filename):
+        #     flash('I only accept files of type ' + str(ALLOWED_EXTENSIONS))
+        #     return redirect(request.url)
+        # when user uploads file with good parameters
+        # if file and allowed_file(file.filename):
+            # filename = secure_filename(file.filename)
+            # file.save(os.path.join(app.config['UPLOAD FOLDER'], filename))
+        return redirect(url_for('uploaded_file', URL=image_url[0]))
+        
+@app.route('/predict')
+def uploaded_file():
+    urlretrieve(request.args.get('URL'), "sample.png")
+    img = Image.open("sample.png")
+
+    test_img = image.load_img("sample.png", target_size=(150,150))
     test_img = image.img_to_array(test_img)
     test_img = np.expand_dims(test_img, axis=0)
     
@@ -100,7 +123,6 @@ def uploaded_file(filename):
     with myGraph.as_default():
         tf.compat.v1.keras.backend.set_session(mySession)
         prediction = myModel.predict(test_img)
-        image_src = '/'+UPLOAD_FOLDER+'/'+filename
         if prediction[0][0] > 0.5:
             classification = Y # Tumor
         else:
@@ -110,9 +132,8 @@ def uploaded_file(filename):
         "status": 200, 
         "prediction": str(prediction[0][0]), 
         "classification": str(classification), 
-        "imagePath": str(image_src)
+        "imagePath": str(request.args.get('URL'))
         }
-
         return jsonify(response)
 
 
