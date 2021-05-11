@@ -81,11 +81,11 @@ def upload_file():
     else: # if request.method == 'POST'
         # check if post request has file part
         image_url = find_image_url(request.data.decode('utf-8'))
-        print('the request url is ')
-        print(image_url[0])
+        # print('the request url is ' + request.data)
+        # print(image_url)
         
-        r = requests.get(image_url[0], stream=True)
-        print('the image url is ' + image_url[0])
+        # r = requests.get(image_url[0], stream=True)
+        # print('the image url is ' + str(image_url))
         # image_url = Image.open(io.BytesIO(r.content))
 
         # if 'file' not in request.files:

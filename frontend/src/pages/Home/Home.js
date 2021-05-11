@@ -20,6 +20,16 @@ class Home extends Component {
     };
   }
 
+  componentDidMount() {
+    this.interval = setInterval(() => { 
+      this.predict()
+    }, 200);
+    this.predict(); // also load one immediately
+}
+componentWillUnmount(){
+  clearInterval(this.state.interval)
+}
+
   handleUpload = (e) => {
     console.log(e.target.value + e.target.name);
     if (e.target.files[0]) {
@@ -53,15 +63,17 @@ class Home extends Component {
           });
       }
     );
-    this.callback()
   }
 
-  callback = () => {  
-    if (this.state.uploaded) {
-      this.predict()
-    }
+  interval = (callback) => {
+    let uploaded = this.state.uploaded
+    const checkUploadStatus = setInterval(function() {
+      if (uploaded == true) {
+        callback()
+        clearInterval(checkUploadStatus)
+      }
+    }, 200);
   }
-
 
   predict = async () => {
     const image = this.state.image;
