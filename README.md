@@ -1,4 +1,4 @@
-# Brain Tumor Detection
+# Brain Tumor Detection ![brain_tumor](/frontend/public/favicon.ico)
 Brain tumor diagnosis is often performed by examining an MRI image due to its high accuracy, specificity, and sensitivity. This imaging modality uses non-ionizing radiation to image soft tissues. Specifically, it detects the concentration or density of protons. The whiter areas in an MRI represent regions of high proton density whereas the darker areas represent regions of low proton density (i.e. air, water). Since tumors have high proton density, they show up as a lighter colour.
 
 ## Project Overview
