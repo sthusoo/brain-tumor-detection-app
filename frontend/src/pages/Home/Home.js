@@ -36,7 +36,7 @@ class Home extends Component {
     if (e.target.files[0]) {
       const imageFile = e.target.files[0];
       console.log(imageFile)
-      this.setState(() => ({image: imageFile}))
+      this.setState(() => ({image: imageFile, uploaded: false}))
     }
   }
 
@@ -60,7 +60,7 @@ class Home extends Component {
           .child(image.name)
           .getDownloadURL()
           .then(url => {
-            this.setState(() => ({uploaded: true}))
+            this.setState(() => ({image_src: url, uploaded: true}))
           });
       }
     );
@@ -96,7 +96,7 @@ class Home extends Component {
       }).then((response) => {  return response.json() }).then((data) => 
       {  
         console.log(data)
-        this.setState(() => ({classification: data.classification, prediction: data.prediction, image_src: data.imagePath, confidence_percent: data.confidence }))
+        this.setState(() => ({classification: data.classification, prediction: data.prediction, confidence_percent: data.confidence }))
         return data
       })
   }
@@ -126,7 +126,7 @@ class Home extends Component {
              <Button id='submit-button' onClick={this.predict}>Submit</Button>
             </Row> : <Row></Row>
             } */}
-            { this.state.uploaded ? 
+            { this.state.image_src != null ? 
                 <Row id='predict'><img width='150' height='150' src={this.state.image_src} className='img-thumbnail' /></Row>
                 : <Row></Row>
             }
