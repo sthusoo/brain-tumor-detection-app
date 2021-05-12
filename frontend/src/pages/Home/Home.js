@@ -60,7 +60,7 @@ class Home extends Component {
           .child(image.name)
           .getDownloadURL()
           .then(url => {
-            this.setState(() => ({image_src: url, uploaded: true}))
+            this.setState(() => ({uploaded: true}))
           });
       }
     );

@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 In the 'backend' directory, you can run:
 
-### `python3 api.py`
+### `python3.8 api.py`
 Runs the Flask app
 
 ## Project Structure
