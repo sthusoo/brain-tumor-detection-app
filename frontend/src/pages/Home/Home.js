@@ -32,10 +32,8 @@ class Home extends Component {
 // }
 
   handleUpload = (e) => {
-    console.log(e.target.value + e.target.name);
     if (e.target.files[0]) {
       const imageFile = e.target.files[0];
-      console.log(imageFile)
       this.setState(() => ({image: imageFile, uploaded: false}))
     }
   }
@@ -130,7 +128,6 @@ class Home extends Component {
                 <Row id='predict'><img width='150' height='150' src={this.state.image_src} className='img-thumbnail' /></Row>
                 : <Row></Row>
             }
-            { console.log('the image source is ' + this.state.image_src) }
             <Row id='predict'>
               <h4>Prediction: </h4>
             </Row>   

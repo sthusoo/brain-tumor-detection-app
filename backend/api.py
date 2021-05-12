@@ -80,7 +80,6 @@ def find_image_url(string):
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     # initial webpage load
-    print(request.method)
     if request.method == 'GET':
         return jsonify({"method": request.method, "status": "200"})
     else: # if request.method == 'POST'
