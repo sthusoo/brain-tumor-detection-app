@@ -42,7 +42,7 @@ Runs the Flask app
     ├── Tumor
 ├── backend
     ├── api.py // Run this file
-    ├── trained_model.h5 // Holds ML model
+    ├── trained_model.h5 // Holds DL model
     ├── requirements.txt
     ├── Procfile
     ├── uploaded_image.png
