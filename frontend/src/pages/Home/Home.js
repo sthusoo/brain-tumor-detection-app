@@ -16,19 +16,20 @@ class Home extends Component {
       prediction: null,
       image_src: null,
       progress: null,
+      confidence_percent: null,
       uploaded: false
     };
   }
 
-  componentDidMount() {
-    this.interval = setInterval(() => { 
-      this.predict()
-    }, 200);
-    this.predict(); // also load one immediately
-}
-componentWillUnmount(){
-  clearInterval(this.state.interval)
-}
+//   componentDidMount() {
+//     this.interval = setInterval(() => { 
+//       this.predict()
+//     }, 200);
+//     this.predict(); // also load one immediately
+// }
+// componentWillUnmount(){
+//   clearInterval(this.state.interval)
+// }
 
   handleUpload = (e) => {
     console.log(e.target.value + e.target.name);
@@ -63,17 +64,24 @@ componentWillUnmount(){
           });
       }
     );
+    this.callback()
   }
 
-  interval = (callback) => {
-    let uploaded = this.state.uploaded
-    const checkUploadStatus = setInterval(function() {
-      if (uploaded == true) {
-        callback()
-        clearInterval(checkUploadStatus)
-      }
-    }, 200);
+  callback = () => {
+    if (this.state.uploaded) {
+      this.predict();
+    }
   }
+
+  // interval = (callback) => {
+  //   let uploaded = this.state.uploaded
+  //   const checkUploadStatus = setInterval(function() {
+  //     if (uploaded == true) {
+  //       callback()
+  //       clearInterval(checkUploadStatus)
+  //     }
+  //   }, 200);
+  // }
 
   predict = async () => {
     const image = this.state.image;
@@ -88,7 +96,7 @@ componentWillUnmount(){
       }).then((response) => {  return response.json() }).then((data) => 
       {  
         console.log(data)
-        this.setState(() => ({classification: data.classification, prediction: data.prediction, image_src: data.imagePath }))
+        this.setState(() => ({classification: data.classification, prediction: data.prediction, image_src: data.imagePath, confidence_percent: data.confidence }))
         return data
       })
   }
@@ -129,7 +137,7 @@ componentWillUnmount(){
             { this.state.classification != null && this.state.uploaded ? 
             <Row id='predict'>
               { (this.state.classification == 'Tumor') ? 
-              <p>This MRI is likely that of a Brain Tumor</p> : <p>This MRI is likely that of a Normal Brain</p> 
+              <p>The MRI is most likely that of a Brain Tumor with a confidence of { this.state.confidence_percent }%</p> : <p>This MRI is most likely that of a Normal Brain with a confidence of { this.state.confidence_percent }%</p> 
               }
             </Row> : <Row></Row>
             }

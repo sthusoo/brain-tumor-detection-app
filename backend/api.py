@@ -17,13 +17,12 @@ UPLOAD_FOLDER = 'static/uploads'
 # Allowed files
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 # Machine Learning Model Filename
-ML_MODEL_FILENAME = 'savedModel.h5'
+ML_MODEL_FILENAME = 'trained_model.h5'
 
 #Load operation system library
 import os
 
 #website libraries
-from flask import render_template
 from flask import Flask, flash, request, redirect, url_for, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
@@ -35,14 +34,20 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 from tensorflow.python.keras.backend import set_session
 from tensorflow.python.keras.models import load_model
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import torch
+import torch.nn.functional as F
+import tensorflow.compat.v1 as tf1
+tf1.disable_v2_behavior()
+
+import tensorflow as tf
+from tensorflow import keras
+from keras import backend as K
 
 from PIL import Image
 import requests
 import re
 from io import BytesIO
-from urllib.request import urlopen, urlretrieve
+from urllib.request import urlretrieve
 import base64
 
 # create website object
@@ -54,10 +59,10 @@ app.secret_key = 'super secret key'
 
 def load_model_from_file():
     #Set up the machine learning session
-    mySession = tf.Session()
+    mySession = tf1.Session()
     set_session(mySession)
     myModel = load_model(ML_MODEL_FILENAME)
-    myGraph = tf.get_default_graph()
+    myGraph = tf1.get_default_graph()
     return (mySession,myModel,myGraph)
 
 # makes sure file is not malicious
@@ -79,62 +84,43 @@ def upload_file():
     if request.method == 'GET':
         return jsonify({"method": request.method, "status": "200"})
     else: # if request.method == 'POST'
-        # check if post request has file part
         image_url = find_image_url(request.data.decode('utf-8'))
-        # print('the request url is ' + request.data)
-        # print(image_url)
-        
-        # r = requests.get(image_url[0], stream=True)
-        # print('the image url is ' + str(image_url))
-        # image_url = Image.open(io.BytesIO(r.content))
-
-        # if 'file' not in request.files:
-        #     print('file not found')
-        #     flash('No file part')
-        #     return redirect(request.url)
-        # file = request.files['file']
-        # if user does not select file, browser submits an empty part without filename
-        # if file.filename == '':
-        #     flash('No selected file')
-        #     return redirect(request.url)
-        # if it isn't an image file
-        # if not allowed_file(file.filename):
-        #     flash('I only accept files of type ' + str(ALLOWED_EXTENSIONS))
-        #     return redirect(request.url)
-        # when user uploads file with good parameters
-        # if file and allowed_file(file.filename):
-            # filename = secure_filename(file.filename)
-            # file.save(os.path.join(app.config['UPLOAD FOLDER'], filename))
         return redirect(url_for('uploaded_file', URL=image_url[0]))
         
 @app.route('/predict')
 def uploaded_file():
-    urlretrieve(request.args.get('URL'), "sample.png")
-    img = Image.open("sample.png")
+    urlretrieve(request.args.get('URL'), "uploaded_image.png")
 
-    test_img = image.load_img("sample.png", target_size=(150,150))
-    test_img = image.img_to_array(test_img)
-    test_img = np.expand_dims(test_img, axis=0)
+    img = keras.preprocessing.image.load_img("uploaded_image.png", target_size=(180,180))
+    img_array = keras.preprocessing.image.img_to_array(img)
+    img_array = tf.expand_dims(img_array, 0)
     
     mySession = app.config['SESSION']
     myModel = app.config['MODEL']
     myGraph = app.config['GRAPH']
+
+    model = keras.models.load_model(ML_MODEL_FILENAME)
+    predictions = model.predict(img_array, steps=1) # array
+    pred = torch.from_numpy(predictions[0]) # Tensor
+    score_number = F.softmax(pred, dim=0).numpy() # array
+    max_score = np.max(score_number) # number
+
+    confidence_percent = round(max_score * 100, 2)
+
+    class_names = ['Normal', 'Tumor']
+
+    classification = class_names[np.argmax(score_number)]
     
-    with myGraph.as_default():
-        tf.compat.v1.keras.backend.set_session(mySession)
-        prediction = myModel.predict(test_img)
-        if prediction[0][0] > 0.5:
-            classification = Y # Tumor
-        else:
-            classification = X # Normal
-        response = {
-        "method": "POST",
-        "status": 200, 
-        "prediction": str(prediction[0][0]), 
-        "classification": str(classification), 
-        "imagePath": str(request.args.get('URL'))
-        }
-        return jsonify(response)
+    response = {
+    "method": "POST",
+    "status": 200, 
+    "predictions": str(predictions[0]), 
+    "confidence": confidence_percent,
+    "classification": classification, 
+    "imagePath": str(request.args.get('URL'))
+    }
+
+    return jsonify(response)
 
 
 if __name__ == "__main__":
