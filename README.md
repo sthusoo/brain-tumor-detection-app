@@ -5,6 +5,11 @@ This project is currently under development. Users can upload an image file of a
 
 This app is hosted with Firebase Hosting at [Brain Tumor Detection App](https://brain-tumor-detection-aa187.web.app). The api must be run in the backend directory using `python3 api.py`.
 
+## Project Demo
+
+![Project Demo](/frontend/src/assets/demo.gif)
+
+
 ## Installation and Setup Instructions
 
 In the 'frontend' directory, you can run:
@@ -24,7 +29,7 @@ Deploys app to [https://brain-tumor-detection-aa187.web.app](https://brain-tumor
 
 In the 'backend' directory, you can run:
 
-#### `python3.8 api.py`
+#### `python3 api.py`
 Runs the Flask app
 
 ## Project Structure
