@@ -5,6 +5,13 @@ body {
     font-family: sans-serif;
 }
 
+#particles-js {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: -100;
+}
+
 .title {
     font-family: sans-serif;
     margin-left: auto;
@@ -22,16 +29,27 @@ span {
     margin-right: 15px;
 }
 
+#center {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+}
+
 #upload-body {
     display: flex;
     justify-content: center;
-    margin: 5rem;
+    margin: 1rem 0rem 5rem 5rem;
 }
 
 #predict {
     display: flex;
     justify-content: center;
-    margin: 1rem;
+    margin-top: 1rem;
+}
+
+#text {
+    display: flex;
+    justify-content: center;
 }
 
 label {

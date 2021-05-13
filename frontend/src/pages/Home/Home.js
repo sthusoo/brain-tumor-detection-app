@@ -2,6 +2,7 @@
 import './Home.css';
 import React, { Component } from 'react';
 import { Row, Col, Container, Form, Button } from 'react-bootstrap';
+import Particles from 'react-particles-js';
 import { storage } from '../../components/Firebase/firebase';
 
 class Home extends Component {
@@ -101,15 +102,63 @@ class Home extends Component {
  
   render() {
     return (
-      <div className="App">
+    <div className="App">
+      <div id="particles-js">
+      <Particles id="particles-js"
+          params={{
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 1500
+                    }
+                },
+                "line_linked": {
+                    "enable": false,
+                    "opacity": 2
+                },
+                "move": {
+                    "direction": "right",
+                    "speed": 0.05
+                },
+                "size": {
+                    "value": 1
+                },
+                "opacity": {
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 1
+                    }
+                }
+            },
+            "interactivity": {
+                "events": {
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    }
+                },
+                "modes": {
+                    "push": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        }} />
+        </div>
           <Container className='title'>
             <h1> Brain Tumor Detection </h1>
           </Container>
           <Container>
+            <Row id='center'>
+              Please upload an Brain MRI below.
+            </Row>
             <Row id='upload-body'>
               <Form>
                   <Col>
-                      <span>Upload Brain MRI:</span>
                       <Form.Control type="file" name='image' onChange={this.handleUpload} />
                   </Col>
               </Form>
@@ -127,10 +176,12 @@ class Home extends Component {
             { this.state.image_src != null ? 
                 <Row id='predict'><img width='150' height='150' src={this.state.image_src} className='img-thumbnail' /></Row>
                 : <Row></Row>
-            }
+            } 
+            { this.state.classification != null ?
             <Row id='predict'>
-              <h4>Prediction: </h4>
-            </Row>   
+              <h4>Prediction</h4>
+            </Row> : <Row></Row>
+            }
             { this.state.classification != null && this.state.uploaded ? 
             <Row id='predict'>
               { (this.state.classification == 'Tumor') ? 
@@ -139,7 +190,8 @@ class Home extends Component {
             </Row> : <Row></Row>
             }
         </Container>
-      </div>
+      
+    </div>
     );
   }
 }
