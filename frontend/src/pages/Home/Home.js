@@ -108,19 +108,18 @@ class Home extends Component {
           params={{
             "particles": {
                 "number": {
-                    "value": 80,
+                    "value": 250,
                     "density": {
                         "enable": true,
                         "value_area": 1500
                     }
                 },
                 "line_linked": {
-                    "enable": false,
-                    "opacity": 2
+                    "enable": true,
+                    "opacity": 0.1
                 },
                 "move": {
-                    "direction": "right",
-                    "speed": 0.05
+                    "speed": 0.2
                 },
                 "size": {
                     "value": 1
@@ -129,7 +128,7 @@ class Home extends Component {
                     "anim": {
                         "enable": true,
                         "speed": 1,
-                        "opacity_min": 1
+                        "opacity_min": 2
                     }
                 }
             },
