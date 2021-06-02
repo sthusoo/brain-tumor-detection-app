@@ -3,13 +3,13 @@ import 'firebase/storage';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyAZ0Ehttva5SujoIHlZh4X4tEv96nMUzyo",
-    authDomain: "brain-tumor-detection-aa187.firebaseapp.com",
-    projectId: "brain-tumor-detection-aa187",
-    storageBucket: "brain-tumor-detection-aa187.appspot.com",
-    messagingSenderId: "104567495340",
-    appId: "1:104567495340:web:4fbdb8d8c51055f63a1d09",
-    measurementId: "G-7MJYX9XXNZ"
+    apiKey: process.env.FB_API_KEY,
+    authDomain: process.env.AFB_UTH_DOMAIN,
+    projectId: process.env.FB_PROJECT_ID,
+    storageBucket: process.env.FB_STORAGE_BUCKET,
+    messagingSenderId: process.env.FB_SENDER_ID,
+    appId: process.env.FB_APP_ID,
+    measurementId: process.env.FB_MEASUREMENT_ID
   };
 
   firebase.initializeApp(firebaseConfig);
@@ -17,14 +17,3 @@ const firebaseConfig = {
   const storage = firebase.storage();
 
   export { storage, firebase as default };
-
-
-// <!-- The core Firebase JS SDK is always required and must be listed first -->
-// <script src="/__/firebase/8.5.0/firebase-app.js"></script>
-
-// <!-- TODO: Add SDKs for Firebase products that you want to use
-//      https://firebase.google.com/docs/web/setup#available-libraries -->
-// <script src="/__/firebase/8.5.0/firebase-analytics.js"></script>
-
-// <!-- Initialize Firebase -->
-// <script src="/__/firebase/init.js"></script>
